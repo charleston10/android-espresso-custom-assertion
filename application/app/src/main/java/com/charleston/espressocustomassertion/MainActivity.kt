@@ -1,13 +1,15 @@
 package com.charleston.espressocustomassertion
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main),
-    CompoundButton.OnCheckedChangeListener {
+    CompoundButton.OnCheckedChangeListener,
+    View.OnClickListener {
 
     private val listAdapter by lazy { ListAdapter() }
 
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main),
         }
 
         switch1.setOnCheckedChangeListener(this)
+        button.setOnClickListener(this)
 
         listAdapter.addItems(getList())
     }
@@ -41,11 +44,26 @@ class MainActivity : AppCompatActivity(R.layout.activity_main),
         listAdapter.addItems(getList(isChecked))
     }
 
+    override fun onClick(v: View?) {
+        listAdapter.addItems(getListMapped())
+    }
+
     private fun getList(filter: Boolean = false): List<ItemModel> {
         return if (filter) {
-            items.filter { it.age <= 50 }
+            items.filter {
+                (it.age?.let { value ->
+                    value <= 50
+                } ?: false)
+            }
         } else {
             items
+        }
+    }
+
+    private fun getListMapped(): List<ItemModel> {
+        return items.map {
+            it.age = null
+            it
         }
     }
 }

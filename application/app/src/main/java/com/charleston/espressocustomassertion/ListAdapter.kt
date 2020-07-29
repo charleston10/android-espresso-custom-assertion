@@ -34,7 +34,13 @@ class ListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(itemModel: ItemModel) {
             itemView.let {
                 it.findViewById<TextView>(R.id.textView).text = itemModel.name
-                it.findViewById<TextView>(R.id.textView2).text = itemModel.age.toString()
+
+                if (itemModel.age == null) {
+                    it.findViewById<TextView>(R.id.textView2).visibility = View.GONE
+                } else {
+                    it.findViewById<TextView>(R.id.textView2).visibility = View.VISIBLE
+                    it.findViewById<TextView>(R.id.textView2).text = itemModel.age.toString()
+                }
             }
         }
     }
